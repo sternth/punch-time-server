@@ -1,11 +1,14 @@
 import dayjs from 'dayjs';
+import { Temp } from './Temp';
 
 export class Logger {
   private static instance: Logger;
 
+  private readonly project: string;
   private readonly template: string;
 
   protected constructor () {
+    this.project = Temp.getInstance().getName();
     this.template = 'YYYY-MM-DD HH:mm:ss:sss';
   }
 
@@ -17,16 +20,16 @@ export class Logger {
   }
 
   public log (...args: unknown[]): void {
-    console.log('[LOG]', this.time(), ...args);
+    console.log(this.project, '[LOG]', this.time(), ...args);
   }
 
   public err (...args: unknown[]): void {
-    console.error('[ERR]', this.time(), ...args);
+    console.error(this.project, '[ERR]', this.time(), ...args);
   }
 
   public debug (...args: unknown[]): void {
     if (process.env.PUNCH_TIME_DEBUG === '1') {
-      console.log('[DEBUG]', this.time(), ...args);
+      console.log(this.project, '[DEBUG]', this.time(), ...args);
     }
   }
 
