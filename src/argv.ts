@@ -2,8 +2,6 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { appPath } from 'punch-time';
 
-console.log('appPath:', appPath);
-
 export default yargs(hideBin(process.argv))
   .detectLocale(false)
   .option('debug', {

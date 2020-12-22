@@ -17,8 +17,9 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'comma-dangle': ["error", "only-multiline"],
-    semi: ["error", "always"],
+    'comma-dangle': ['error', 'only-multiline'],
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
   },
   overrides: [
     {

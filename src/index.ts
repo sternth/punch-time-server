@@ -1,29 +1,26 @@
-import express from 'express';
-import argv from './argv';
 import { Temp } from './common/utils/Temp';
-import api from './api';
-import timestamp from './middlewares/timestamp';
-import sendApp from './middlewares/sendApp';
+import { Logger } from './common/utils/Logger';
+import { Connection } from './common/db/Connection';
 
-const API = /^\/api/;
-const NO_API = /^(?!\/api).+/;
-
-export function run (pkg: { name: string, version: string }): void {
-  const temp = Temp.getInstance();
-  const app: express.Application = express();
-  const port: number = argv.port || 3000;
-
-  temp
+export function prepare (pkg: { name: string, version: string }): () => void {
+  Temp.getInstance()
     .setName(pkg.name)
     .setVersion(pkg.version);
 
-  app
-    .use(express.static(argv['app-path']))
-    .use(timestamp)
-    .use(API, api)
-    .use(NO_API, sendApp);
+  return run;
+}
 
-  app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+function run (): void {
+  const name = Temp.getInstance().getName();
+  const version = Temp.getInstance().getVersion();
+  const logger = Logger.getInstance();
+
+  logger.log(`Run ${name}@${version} ...`);
+  logger.log('Connecting to database ...');
+  Connection.getInstance().connect().then(() => {
+    logger.log('Database connected ... starting server ...');
+    import('./server').then(server => server.run());
+  }).catch(err => {
+    logger.err(err);
   });
 }

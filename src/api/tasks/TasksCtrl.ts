@@ -1,9 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
+import { TaskService } from '../../services/TaskService';
+import { TaskNotFoundError } from '../../common/errors/TaskNotFoundError';
 
 export class TasksCtrl {
   private static instance: TasksCtrl;
 
+  private readonly service: TaskService;
+
   protected constructor () {
+    this.service = TaskService.getInstance();
   }
 
   public static getInstance (): TasksCtrl {
@@ -14,42 +20,56 @@ export class TasksCtrl {
   }
 
   public getTasks (req: Request, res: Response, next: NextFunction): void {
-    try {
-      res.send('GET_TASKS');
-    } catch (err) {
+    this.service.getAll().then(tasks => {
+      res.send(tasks);
+    }).catch(err => {
       next(err);
-    }
+    });
   }
 
   public getTask (req: Request, res: Response, next: NextFunction): void {
-    try {
-      res.send(`GET_TASK: ${req.params.id}`);
-    } catch (err) {
-      next(err);
-    }
+    this.service.get(req.params.id).then(task => {
+      res.send(task);
+    }).catch(err => {
+      if (err instanceof TaskNotFoundError) {
+        res.send(err.message).status(404);
+      } else {
+        next(err);
+      }
+    });
   }
 
   public addTask (req: Request, res: Response, next: NextFunction): void {
-    try {
-      res.send('ADD_TASK');
-    } catch (err) {
-      next(err);
-    }
+    this.service.add(req.body).then(task => {
+      res.send(task);
+    }).catch(err => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.send(err.message).status(400);
+      } else {
+        next(err);
+      }
+    });
   }
 
   public editTask (req: Request, res: Response, next: NextFunction): void {
-    try {
-      res.send(`EDIT_TASK: ${req.params.id}`);
-    } catch (err) {
-      next(err);
-    }
+    this.service.edit(req.params.id, req.body).then(task => {
+      res.send(task);
+    }).catch(err => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.send(err.message).status(400);
+      } else if (err instanceof TaskNotFoundError) {
+        res.send(err.message).status(404);
+      } else {
+        next(err);
+      }
+    });
   }
 
   public removeTask (req: Request, res: Response, next: NextFunction): void {
-    try {
-      res.send(`REMOVE_TASK: ${req.params.id}`);
-    } catch (err) {
+    this.service.remove(req.params.id).then(() => {
+      res.send({ removed: req.params.id }).status(200);
+    }).catch(err => {
       next(err);
-    }
+    });
   }
 }

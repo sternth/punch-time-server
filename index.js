@@ -1,5 +1,6 @@
 /* eslint-disable */
 const pkg = require('./package.json');
-const server = require('./dist/index');
+const main = require('./dist/index');
+const run = main.prepare(pkg);
 
-server.run(pkg);
+run();
