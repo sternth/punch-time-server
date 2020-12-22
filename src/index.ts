@@ -1,13 +1,7 @@
-import express from 'express';
-import bodyParser from 'body-parser';
 import { project } from './pkg';
 import { Logger } from './common/utils/Logger';
 import { Connection } from './common/db/Connection';
-import argv from './argv';
-import api from './api';
-import timestamp from './middlewares/timestamp';
-import sendApp from './middlewares/sendApp';
-import errorHandler from './middlewares/errorHandler';
+import { Server } from './common/srv/Server';
 
 const logger = Logger.getInstance();
 
@@ -21,22 +15,6 @@ async function init (): Promise<void> {
   const dbUri = await Connection.getInstance().connect();
   logger.log(`Connected to database ${dbUri} ...`);
   logger.log('Starting server ...');
-  const port = await startServer();
+  const port = await Server.getInstance().start();
   logger.log(`Server listening at http://localhost:${port} ...`);
-}
-
-async function startServer (): Promise<number> {
-  const API = /^\/api/;
-  const NO_API = /^(?!\/api).+/;
-
-  return new Promise(resolve => {
-    express()
-      .use(express.static(argv['app-path']))
-      .use(timestamp)
-      .use(bodyParser.json())
-      .use(API, api)
-      .use(NO_API, sendApp)
-      .use(errorHandler)
-      .listen(argv.port, () => resolve(argv.port));
-  });
 }
