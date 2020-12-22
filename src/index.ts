@@ -7,6 +7,7 @@ import argv from './argv';
 import api from './api';
 import timestamp from './middlewares/timestamp';
 import sendApp from './middlewares/sendApp';
+import errorHandler from './middlewares/errorHandler';
 
 const logger = Logger.getInstance();
 
@@ -35,6 +36,7 @@ async function startServer (): Promise<number> {
       .use(bodyParser.json())
       .use(API, api)
       .use(NO_API, sendApp)
+      .use(errorHandler)
       .listen(argv.port, () => resolve(argv.port));
   });
 }

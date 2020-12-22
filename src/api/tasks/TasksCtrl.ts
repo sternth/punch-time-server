@@ -32,7 +32,7 @@ export class TasksCtrl {
       res.send(task);
     }).catch(err => {
       if (err instanceof TaskNotFoundError) {
-        res.send(err.message).status(404);
+        res.status(404).send(err.message);
       } else {
         next(err);
       }
@@ -44,7 +44,7 @@ export class TasksCtrl {
       res.send(task);
     }).catch(err => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.send(err.message).status(400);
+        res.status(400).send(err.message);
       } else {
         next(err);
       }
@@ -56,9 +56,9 @@ export class TasksCtrl {
       res.send(task);
     }).catch(err => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.send(err.message).status(400);
+        res.status(400).send(err.message);
       } else if (err instanceof TaskNotFoundError) {
-        res.send(err.message).status(404);
+        res.status(404).send(err.message);
       } else {
         next(err);
       }
@@ -67,7 +67,7 @@ export class TasksCtrl {
 
   public removeTask (req: Request, res: Response, next: NextFunction): void {
     this.service.remove(req.params.id).then(task => {
-      res.send({ removed: task.id }).status(200);
+      res.status(200).send({ removed: task.id });
     }).catch(err => {
       next(err);
     });
