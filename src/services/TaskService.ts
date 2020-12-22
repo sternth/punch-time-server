@@ -53,7 +53,7 @@ export class TaskService {
     return Task.findOne(filter);
   }
 
-  public async remove (id: string): Promise<void> {
-    return Task.remove({ _id: id });
+  public async remove (id: string): Promise<ITask> {
+    return Task.findByIdAndDelete(id);
   }
 }
