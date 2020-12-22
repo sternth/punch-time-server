@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Backend for punch-time web application.",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "00_initDB.js"
+  ],
   "scripts": {
     "build": "tsc",
     "serve": "tsc-watch --onSuccess \"node ./dist/index.js\"",
