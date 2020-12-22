@@ -10,6 +10,7 @@ export class Config {
   private readonly db: string;
 
   public readonly uri: string;
+  public readonly uriWithoutCredentials: string;
   public readonly options: mongoose.ConnectOptions;
 
   protected constructor () {
@@ -19,6 +20,7 @@ export class Config {
     this.port = process.env.MONGO_PORT || '27017';
     this.db = process.env.MONGO_DB || 'punchTime';
     this.uri = this.createUri();
+    this.uriWithoutCredentials = this.createUri(false);
     this.options = {
       useUnifiedTopology: true,
       useNewUrlParser: true,
@@ -38,8 +40,8 @@ export class Config {
     return Config.instance;
   }
 
-  private createUri (): string {
-    const credentials = this.getCredentials();
+  private createUri (withCredentials = true): string {
+    const credentials = withCredentials ? this.getCredentials() : '';
     const { host, port } = this;
 
     return `mongodb://${credentials}${host}:${port}`;

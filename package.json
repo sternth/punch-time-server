@@ -2,10 +2,10 @@
   "name": "punch-time-server",
   "version": "0.1.0",
   "description": "Backend for punch-time web application.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "serve": "tsc-watch --onSuccess \"node ./index.js\"",
+    "serve": "tsc-watch --onSuccess \"node ./dist/index.js\"",
     "lint": "eslint **/*.ts",
     "test": "jest"
   },
