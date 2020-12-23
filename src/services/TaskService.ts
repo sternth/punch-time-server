@@ -2,6 +2,7 @@ import { Logger } from '../common/utils/Logger';
 import { TaskData } from '../common/types/TaskData';
 import { Task, ITask } from '../common/models/task';
 import { TaskNotFoundError } from '../common/errors/TaskNotFoundError';
+import dayjs from 'dayjs';
 
 export class TaskService {
   private static instance: TaskService;
@@ -34,9 +35,16 @@ export class TaskService {
     return task;
   }
 
-  public async getAll (): Promise<ITask[]> {
+  public async getAll (lastDays = 7): Promise<ITask[]> {
+    const lastDate = dayjs()
+      .startOf('day')
+      .subtract(lastDays, 'day')
+      .valueOf();
+
     return Task
-      .find({})
+      .find({
+        start: { $gte: lastDate },
+      })
       .sort({ data: -1 });
   }
 

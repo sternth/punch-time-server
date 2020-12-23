@@ -20,7 +20,8 @@ export class TasksCtrl {
   }
 
   public getTasks (req: Request, res: Response, next: NextFunction): void {
-    this.service.getAll().then(tasks => {
+    const lastDays = parseInt(req.query.lastDays.toString());
+    this.service.getAll(lastDays).then(tasks => {
       res.send(tasks);
     }).catch(err => {
       next(err);
