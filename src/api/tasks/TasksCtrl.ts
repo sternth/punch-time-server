@@ -68,7 +68,7 @@ export class TasksCtrl {
 
   public removeTask (req: Request, res: Response, next: NextFunction): void {
     this.service.remove(req.params.id).then(task => {
-      res.status(200).send({ removed: task.id });
+      res.status(200).send(task);
     }).catch(err => {
       next(err);
     });
