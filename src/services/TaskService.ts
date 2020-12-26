@@ -44,8 +44,7 @@ export class TaskService {
     return Task
       .find({
         start: { $gte: lastDate },
-      })
-      .sort({ data: -1 });
+      });
   }
 
   public async edit (id: string, data: TaskData): Promise<ITask> {
