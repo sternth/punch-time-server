@@ -29,7 +29,7 @@ export class Config {
       keepAlive: true,
       poolSize: 50,
       autoIndex: false,
-      dbName: process.env.MONGO_DB || 'punchTime',
+      dbName: this.db,
     };
   }
 
