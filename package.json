@@ -1,6 +1,6 @@
 {
   "name": "punch-time-server",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Backend for punch-time web application.",
   "bin": "bin/punch-time-server.js",
   "files": [
